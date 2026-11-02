@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PokéStore TCG - Coleccionables Oficiales</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="main-header navbar navbar-expand-lg bg-white shadow-sm px-4 sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold text-danger d-flex align-items-center gap-2" href="#">
+        <i class="bi bi-lightning-charge-fill fs-4"></i> PokéStore TCG
+      </a>
+      <div class="collapse navbar-collapse justify-content-center">
+        <ul class="navbar-nav gap-3">
+          <li class="nav-item"><a class="nav-link fw-semibold" href="#inicio">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link fw-semibold" href="#nosotros">Sobre Nosotros</a></li>
+          <li class="nav-item"><a class="nav-link fw-semibold" href="#catalogo">Catálogo</a></li>
+          <li class="nav-item"><a class="nav-link fw-semibold" href="#novedades">Novedades</a></li>
+        </ul>
+      </div>
+      <button class="btn btn-outline-danger position-relative d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#cartModal">
+        <i class="bi bi-cart3 fs-5"></i>
+        <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <section id="inicio" class="hero-section text-white text-center py-5">
+    <div class="container py-5">
+      <h1 class="display-4 fw-bold mb-3">El santuario definitivo para los verdaderos Maestros Pokémon</h1>
+      <p class="lead mb-4 opacity-9">Descubre cartas legendarias, completa tu Pokédex física y vive la emoción del TCG con envíos seguros y colecciones actualizadas en tiempo real.</p>
+      <a href="#catalogo" class="btn btn-light text-danger fw-bold px-4 py-2 rounded-pill shadow">Explorar Catálogo Ahora</a>
+    </div>
+  </section>
+
+  <section id="nosotros" class="container py-5 my-4">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mb-4 mb-lg-0">
+        <h2 class="fw-bold mb-3 text-dark">Sobre Nosotros</h2>
+        <p class="text-muted leading-relaxed">
+          En <strong>PokéStore TCG</strong> somos fanáticos apasionados por el juego de cartas coleccionables. Nuestra misión es conectar a entrenadores y coleccionistas de toda la región con las piezas más codiciadas del hobby.
+        </p>
+      </div>
+      <div class="col-lg-6 text-center">
+        <div class="p-4 bg-light rounded-4 shadow-sm border">
+          <h4 class="text-danger fw-bold mb-2 d-flex align-items-center justify-content-center gap-2">
+            <i class="bi bi-star-fill small"></i> ¿Por qué elegirnos?
+          </h4>
+          <p class="text-muted small mb-0">Catálogo sincronizado en vivo mediante TCGdex, autenticidad garantizada y una comunidad hecha por y para coleccionistas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="catalogo" class="container py-5 bg-light rounded-4 my-4 shadow-sm">
+    <div class="text-center mb-4">
+      <h2 class="fw-bold">Catálogo de Cartas TCG</h2>
+      <p class="text-muted">Explora nuestra selección en tiempo real</p>
+    </div>
+
+    <div id="loading" class="text-center fw-bold fs-5 my-5 text-secondary">
+      Cargando productos desde la API...
+    </div>
+    <div id="error" class="text-center fw-bold fs-5 my-5 text-danger" style="display: none;"></div>
+    
+    <div id="products-grid" class="products-grid"></div>
+  </section>
+
+  <section id="novedades" class="bg-dark text-white text-center py-5">
+    <div class="container py-4">
+      <h2 class="fw-bold mb-3">¡Nuevas expansiones cada semana!</h2>
+      <p class="text-secondary mb-4">Mantente al tanto de los lanzamientos más codiciados del competitivo de TCG.</p>
+      <span class="badge bg-danger px-3 py-2 text-uppercase fs-6">Stock Limitado</span>
+    </div>
+  </section>
+
+  <footer class="bg-black text-secondary text-center py-4">
+    <p class="mb-0 small">&copy; 2026 PokéStore TCG. Todos los derechos reservados.</p>
+  </footer>
+
+  <div class="modal fade" id="cardDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title fw-bold">Detalle de la Carta</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center p-4">
+          <div id="modal-card-img-container" class="mb-3"></div>
+          <h3 id="modal-card-name" class="fw-bold mb-2">Nombre de la Carta</h3>
+          <p class="text-success fs-4 fw-bold mb-3" id="modal-card-price">$0.00 USD</p>
+          <p class="text-secondary small">Carta oficial sincronizada con TCGdex.</p>
+        </div>
+        <div class="modal-footer bg-light justify-content-between">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" id="modal-add-cart-btn" class="btn btn-danger fw-bold px-4 d-flex align-items-center gap-2">
+            <i class="bi bi-cart-plus-fill"></i> Añadir al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="cartModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title fw-bold d-flex align-items-center gap-2">
+            <i class="bi bi-cart3-fill"></i> Tu Carrito de Compras
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div id="cart-items-container" class="table-responsive">
+            <p class="text-center text-muted">Tu carrito está vacío.</p>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between align-items-center fs-5 fw-bold">
+            <span>Total a pagar:</span>
+            <span id="cart-total" class="text-success">$0.00 USD</span>
+          </div>
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Seguir comprando</button>
+          <button type="button" class="btn btn-success fw-bold" onclick="checkout()">Proceder al pago</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
+    <div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body d-flex align-items-center gap-2" id="toast-message">
+          <i class="bi bi-check-circle-fill fs-5"></i> - ¡Producto añadido exitosamente!
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="scripts.js"></script>
+</body>
+</html>
